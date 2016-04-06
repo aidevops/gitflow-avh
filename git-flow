@@ -46,7 +46,14 @@ fi
 # git-flow file is a symbolic link
 case $(uname -s) in
 Linux)
-	export GITFLOW_DIR=$(dirname "$(readlink -e "$0")")
+	case $(grep ^ID /etc/os-release | awk -F= '{print$2}') in
+	alpine)
+	    export GITFLOW_DIR=$(dirname "$(readlink -f "$0")")
+	    ;;
+	*)
+	    export GITFLOW_DIR=$(dirname "$(readlink -e "$0")")
+	    ;;
+	esac
 	;;
 FreeBSD|OpenBSD|NetBSD)
 	export FLAGS_GETOPT_CMD='/usr/local/bin/getopt'
